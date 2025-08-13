@@ -1,19 +1,104 @@
 import { BrowserRouter, Routes, Route, NavLink } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import './index.css';
 
 function Sidebar() {
-  const base = 'block rounded-md px-3 py-2 text-sm font-medium';
-  const idle = 'text-gray-600 hover:bg-gray-100 hover:text-gray-900';
-  const active = 'bg-gray-100 text-gray-900';
+  const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
+  const [isPinned, setIsPinned] = useState<boolean>(true);
+
+  useEffect(() => {
+    try {
+      const savedPinned = localStorage.getItem('sidebar:pinned');
+      const savedCollapsed = localStorage.getItem('sidebar:collapsed');
+      if (savedPinned !== null) setIsPinned(savedPinned === 'true');
+      if (savedCollapsed !== null) setIsCollapsed(savedCollapsed === 'true');
+    } catch {}
+  }, []);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('sidebar:pinned', String(isPinned));
+      localStorage.setItem('sidebar:collapsed', String(isCollapsed));
+    } catch {}
+  }, [isPinned, isCollapsed]);
+
+  const base = 'flex items-center rounded-md px-3 py-3 text-sm font-medium transition-colors';
+  const idle = 'text-gray-600 hover:bg-gray-50 hover:text-gray-900';
+  const active = 'bg-gray-100 text-gray-900 ring-1 ring-gray-200';
+
+  const wrapperBase = 'hidden md:flex md:flex-col md:border-r md:border-gray-200 md:bg-white transition-[width] duration-200 ease-in-out overflow-x-hidden';
+  const widthClass = (isPinned || !isCollapsed) ? 'md:w-64' : 'md:w-16 md:hover:w-64';
+  const paddingClass = 'md:px-3 md:py-4';
+
   return (
-    <aside className="hidden md:flex md:w-64 md:flex-col md:gap-4 md:border-r md:border-gray-200 md:bg-white md:px-4 md:py-6">
+    <aside className={`group ${wrapperBase} ${widthClass} ${paddingClass}`}>
       <div className="px-1">
-        <div className="mb-4 text-lg font-semibold text-gray-900">WEBJ</div>
-        <nav className="flex flex-col gap-1">
-          <NavLink to="/" end className={({isActive})=>`${base} ${isActive?active:idle}`}>Início</NavLink>
-          <NavLink to="/contatos" className={({isActive})=>`${base} ${isActive?active:idle}`}>Contatos</NavLink>
-          <NavLink to="/grupos" className={({isActive})=>`${base} ${isActive?active:idle}`}>Grupos</NavLink>
-          <NavLink to="/configuracoes" className={({isActive})=>`${base} ${isActive?active:idle}`}>Configurações</NavLink>
+        <div className="mb-3 flex items-center justify-between">
+          <div className="flex items-center min-h-6">
+            <div className={`text-lg font-semibold text-gray-900 ${isCollapsed ? 'hidden md:group-hover:block' : 'block'}`}>WEBJ</div>
+          </div>
+          <div className="flex items-center gap-1">
+            <button
+              type="button"
+              onClick={() => setIsPinned(p => !p)}
+              title={isPinned ? 'Desafixar' : 'Fixar'}
+              className="inline-flex items-center justify-center rounded-md p-1.5 text-gray-600 hover:bg-gray-100 hover:text-gray-900 border border-transparent hover:border-gray-200"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-4 w-4">
+                <path d="M14.7 3.3a1 1 0 0 1 1.4 0l4.6 4.6a1 1 0 0 1 0 1.4l-3.18 3.18a2 2 0 0 0-.52 1.9l.62 2.48a1 1 0 0 1-1.23 1.22l-2.48-.62a2 2 0 0 0-1.9.52L7.25 21.3a1 1 0 0 1-1.41-1.41l2.3-2.3a2 2 0 0 0 .52-1.9l-.62-2.48a1 1 0 0 1 1.23-1.23l2.48.62a2 2 0 0 0 1.9-.52L14.7 3.3Z" />
+              </svg>
+            </button>
+            <button
+              type="button"
+              onClick={() => setIsCollapsed(c => !c)}
+              title={isCollapsed ? 'Expandir' : 'Esconder'}
+              className="inline-flex items-center justify-center rounded-md p-1.5 text-gray-600 hover:bg-gray-100 hover:text-gray-900 border border-transparent hover:border-gray-200"
+            >
+              {isCollapsed ? (
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-4 w-4">
+                  <path d="M15.78 7.22a.75.75 0 0 1 0 1.06L13.06 11l2.72 2.72a.75.75 0 1 1-1.06 1.06l-3.25-3.25a.75.75 0 0 1 0-1.06l3.25-3.25a.75.75 0 0 1 1.06 0Z" />
+                </svg>
+              ) : (
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-4 w-4">
+                  <path d="M8.22 16.78a.75.75 0 0 1 0-1.06L10.94 13 8.22 10.28a.75.75 0 1 1 1.06-1.06l3.25 3.25a.75.75 0 0 1 0 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0Z" />
+                </svg>
+              )}
+            </button>
+          </div>
+        </div>
+        <nav className="flex flex-col gap-2">
+          <NavLink to="/" end className={({isActive})=>`${base} ${isActive?active:idle}`}>
+            <span className="inline-flex items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5 text-gray-500">
+                <path d="M12.97 2.72a1.5 1.5 0 0 0-1.94 0l-7.5 6.43A1.5 1.5 0 0 0 3 10.3V20a2 2 0 0 0 2 2h4.5a.5.5 0 0 0 .5-.5V15a2 2 0 0 1 2-2h0a2 2 0 0 1 2 2v6.5a.5.5 0 0 0 .5.5H19a2 2 0 0 0 2-2v-9.7a1.5 1.5 0 0 0-.53-1.15l-7.5-6.43Z" />
+              </svg>
+              <span className={`${isCollapsed ? 'hidden md:group-hover:inline' : 'inline'} ml-3`}>Início</span>
+            </span>
+          </NavLink>
+          <NavLink to="/contatos" className={({isActive})=>`${base} ${isActive?active:idle}`}>
+            <span className="inline-flex items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5 text-gray-500">
+                <path d="M7.5 6.75a3.75 3.75 0 1 1 7.5 0 3.75 3.75 0 0 1-7.5 0ZM3 19.5A6.75 6.75 0 0 1 9.75 12.75h4.5A6.75 6.75 0 0 1 21 19.5v.75A.75.75 0 0 1 20.25 21H3.75A.75.75 0 0 1 3 20.25V19.5Z" />
+              </svg>
+              <span className={`${isCollapsed ? 'hidden md:group-hover:inline' : 'inline'} ml-3`}>Contatos</span>
+            </span>
+          </NavLink>
+          <NavLink to="/grupos" className={({isActive})=>`${base} ${isActive?active:idle}`}>
+            <span className="inline-flex items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5 text-gray-500">
+                <path d="M3 7.5A2.5 2.5 0 0 1 5.5 5h13A2.5 2.5 0 0 1 21 7.5V9H3V7.5ZM3 10.5h18V16.5A2.5 2.5 0 0 1 18.5 19h-13A2.5 2.5 0 0 1 3 16.5V10.5Z" />
+              </svg>
+              <span className={`${isCollapsed ? 'hidden md:group-hover:inline' : 'inline'} ml-3`}>Grupos</span>
+            </span>
+          </NavLink>
+          <NavLink to="/configuracoes" className={({isActive})=>`${base} ${isActive?active:idle}`}>
+            <span className="inline-flex items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5 text-gray-500">
+                <path d="M10.325 4.317a1.75 1.75 0 0 1 3.35 0l.142.568a1.75 1.75 0 0 0 2.37 1.23l.54-.216a1.75 1.75 0 0 1 2.265 2.265l-.216.54a1.75 1.75 0 0 0 1.23 2.37l.568.142a1.75 1.75 0 0 1 0 3.35l-.568.142a1.75 1.75 0 0 0-1.23 2.37l.216.54a1.75 1.75 0 0 1-2.265 2.265l-.54-.216a1.75 1.75 0 0 0-2.37 1.23l-.142.568a1.75 1.75 0 0 1-3.35 0l-.142-.568a1.75 1.75 0 0 0-2.37-1.23l-.54.216a1.75 1.75 0 0 1-2.265-2.265l.216-.54a1.75 1.75 0 0 0-1.23-2.37l-.568-.142a1.75 1.75 0 0 1 0-3.35l.568-.142a1.75 1.75 0 0 0 1.23-2.37l-.216-.54A1.75 1.75 0 0 1 7.85 5.899l.54.216a1.75 1.75 0 0 0 2.37-1.23l.142-.568ZM12 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6Z" />
+              </svg>
+              <span className={`${isCollapsed ? 'hidden md:group-hover:inline' : 'inline'} ml-3`}>Configurações</span>
+            </span>
+          </NavLink>
         </nav>
       </div>
     </aside>
