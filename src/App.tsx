@@ -25,6 +25,11 @@ function Sidebar() {
   const base = 'flex items-center rounded-md px-3 py-2.5 text-sm font-medium transition-colors';
   const idle = 'text-gray-600 hover:bg-gray-50 hover:text-gray-900';
   const active = 'bg-gray-100 text-gray-900 ring-1 ring-gray-200 shadow-sm';
+  const collapsedRowIdle = 'text-gray-600 hover:text-gray-900';
+  const collapsedRowActive = 'text-gray-900';
+  const iconWrapBase = 'flex h-8 w-8 items-center justify-center rounded-md transition-colors';
+  const iconWrapIdle = 'text-gray-500 hover:bg-gray-100';
+  const iconWrapActive = 'bg-gray-100 ring-1 ring-gray-200 text-gray-900';
 
   const wrapperBase = 'hidden md:flex md:flex-col md:border-r md:border-gray-200 md:bg-white md:shadow-sm transition-[width] duration-200 ease-in-out overflow-x-hidden';
   const widthClass = (isPinned || !isCollapsed) ? 'md:w-60' : 'md:w-16 md:hover:w-60';
@@ -67,37 +72,78 @@ function Sidebar() {
           </div>
         </div>
         <nav className="flex flex-col gap-2">
-          <NavLink to="/" end title="Início" className={({isActive})=>`${base} ${isActive?active:idle}`}>
-            <span className="inline-flex items-center">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5 text-gray-500">
-                <path d="M12.97 2.72a1.5 1.5 0 0 0-1.94 0l-7.5 6.43A1.5 1.5 0 0 0 3 10.3V20a2 2 0 0 0 2 2h4.5a.5.5 0 0 0 .5-.5V15a2 2 0 0 1 2-2h0a2 2 0 0 1 2 2v6.5a.5.5 0 0 0 .5.5H19a2 2 0 0 0 2-2v-9.7a1.5 1.5 0 0 0-.53-1.15l-7.5-6.43Z" />
-              </svg>
-              <span className={`${isCollapsed ? 'hidden md:group-hover:inline' : 'inline'} ml-3`}>Início</span>
-            </span>
+          <NavLink
+            to="/"
+            end
+            title="Início"
+            className={({isActive})=>
+              `${base} ${isCollapsed ? (isActive ? collapsedRowActive : collapsedRowIdle) : (isActive ? active : idle)} ${isCollapsed ? 'px-2' : ''}`
+            }
+          >
+            {({ isActive }) => (
+              <span className="inline-flex items-center">
+                <span className={`${isCollapsed ? `${iconWrapBase} ${isActive ? iconWrapActive : iconWrapIdle}` : ''}`}>
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className={`h-5 w-5 ${isCollapsed ? '' : 'text-gray-500'}`}>
+                    <path d="M12.97 2.72a1.5 1.5 0 0 0-1.94 0l-7.5 6.43A1.5 1.5 0 0 0 3 10.3V20a2 2 0 0 0 2 2h4.5a.5.5 0 0 0 .5-.5V15a2 2 0 0 1 2-2h0a2 2 0 0 1 2 2v6.5a.5.5 0 0 0 .5.5H19a2 2 0 0 0 2-2v-9.7a1.5 1.5 0 0 0-.53-1.15l-7.5-6.43Z" />
+                  </svg>
+                </span>
+                <span className={`${isCollapsed ? 'hidden md:group-hover:inline' : 'inline'} ml-3`}>Início</span>
+              </span>
+            )}
           </NavLink>
-          <NavLink to="/contatos" title="Contatos" className={({isActive})=>`${base} ${isActive?active:idle}`}>
-            <span className="inline-flex items-center">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5 text-gray-500">
-                <path d="M7.5 6.75a3.75 3.75 0 1 1 7.5 0 3.75 3.75 0 0 1-7.5 0ZM3 19.5A6.75 6.75 0 0 1 9.75 12.75h4.5A6.75 6.75 0 0 1 21 19.5v.75A.75.75 0 0 1 20.25 21H3.75A.75.75 0 0 1 3 20.25V19.5Z" />
-              </svg>
-              <span className={`${isCollapsed ? 'hidden md:group-hover:inline' : 'inline'} ml-3`}>Contatos</span>
-            </span>
+          <NavLink
+            to="/contatos"
+            title="Contatos"
+            className={({isActive})=>
+              `${base} ${isCollapsed ? (isActive ? collapsedRowActive : collapsedRowIdle) : (isActive ? active : idle)} ${isCollapsed ? 'px-2' : ''}`
+            }
+          >
+            {({ isActive }) => (
+              <span className="inline-flex items-center">
+                <span className={`${isCollapsed ? `${iconWrapBase} ${isActive ? iconWrapActive : iconWrapIdle}` : ''}`}>
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className={`h-5 w-5 ${isCollapsed ? '' : 'text-gray-500'}`}>
+                    <path d="M7.5 6.75a3.75 3.75 0 1 1 7.5 0 3.75 3.75 0 0 1-7.5 0ZM3 19.5A6.75 6.75 0 0 1 9.75 12.75h4.5A6.75 6.75 0 0 1 21 19.5v.75A.75.75 0 0 1 20.25 21H3.75A.75.75 0 0 1 3 20.25V19.5Z" />
+                  </svg>
+                </span>
+                <span className={`${isCollapsed ? 'hidden md:group-hover:inline' : 'inline'} ml-3`}>Contatos</span>
+              </span>
+            )}
           </NavLink>
-          <NavLink to="/grupos" title="Grupos" className={({isActive})=>`${base} ${isActive?active:idle}`}>
-            <span className="inline-flex items-center">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5 text-gray-500">
-                <path d="M20 2H4a2 2 0 0 0-2 2v14l4-4h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2Z" />
-              </svg>
-              <span className={`${isCollapsed ? 'hidden md:group-hover:inline' : 'inline'} ml-3`}>Grupos</span>
-            </span>
+          <NavLink
+            to="/grupos"
+            title="Grupos"
+            className={({isActive})=>
+              `${base} ${isCollapsed ? (isActive ? collapsedRowActive : collapsedRowIdle) : (isActive ? active : idle)} ${isCollapsed ? 'px-2' : ''}`
+            }
+          >
+            {({ isActive }) => (
+              <span className="inline-flex items-center">
+                <span className={`${isCollapsed ? `${iconWrapBase} ${isActive ? iconWrapActive : iconWrapIdle}` : ''}`}>
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className={`h-5 w-5 ${isCollapsed ? '' : 'text-gray-500'}`}>
+                    <path d="M20 2H4a2 2 0 0 0-2 2v14l4-4h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2Z" />
+                  </svg>
+                </span>
+                <span className={`${isCollapsed ? 'hidden md:group-hover:inline' : 'inline'} ml-3`}>Grupos</span>
+              </span>
+            )}
           </NavLink>
-          <NavLink to="/configuracoes" title="Configurações" className={({isActive})=>`${base} ${isActive?active:idle}`}>
-            <span className="inline-flex items-center">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5 text-gray-500">
-                <path d="M10.325 4.317a1.75 1.75 0 0 1 3.35 0l.142.568a1.75 1.75 0 0 0 2.37 1.23l.54-.216a1.75 1.75 0 0 1 2.265 2.265l-.216.54a1.75 1.75 0 0 0 1.23 2.37l.568.142a1.75 1.75 0 0 1 0 3.35l-.568.142a1.75 1.75 0 0 0-1.23 2.37l.216.54a1.75 1.75 0 0 1-2.265 2.265l-.54-.216a1.75 1.75 0 0 0-2.37 1.23l-.142.568a1.75 1.75 0 0 1-3.35 0l-.142-.568a1.75 1.75 0 0 0-2.37-1.23l-.54.216a1.75 1.75 0 0 1-2.265-2.265l.216-.54a1.75 1.75 0 0 0-1.23-2.37l-.568-.142a1.75 1.75 0 0 1 0-3.35l.568-.142a1.75 1.75 0 0 0 1.23-2.37l-.216-.54A1.75 1.75 0 0 1 7.85 5.899l.54.216a1.75 1.75 0 0 0 2.37-1.23l.142-.568ZM12 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6Z" />
-              </svg>
-              <span className={`${isCollapsed ? 'hidden md:group-hover:inline' : 'inline'} ml-3`}>Configurações</span>
-            </span>
+          <NavLink
+            to="/configuracoes"
+            title="Configurações"
+            className={({isActive})=>
+              `${base} ${isCollapsed ? (isActive ? collapsedRowActive : collapsedRowIdle) : (isActive ? active : idle)} ${isCollapsed ? 'px-2' : ''}`
+            }
+          >
+            {({ isActive }) => (
+              <span className="inline-flex items-center">
+                <span className={`${isCollapsed ? `${iconWrapBase} ${isActive ? iconWrapActive : iconWrapIdle}` : ''}`}>
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className={`h-5 w-5 ${isCollapsed ? '' : 'text-gray-500'}`}>
+                    <path d="M10.325 4.317a1.75 1.75 0 0 1 3.35 0l.142.568a1.75 1.75 0 0 0 2.37 1.23l.54-.216a1.75 1.75 0 0 1 2.265 2.265l-.216.54a1.75 1.75 0 0 0 1.23 2.37l.568.142a1.75 1.75 0 0 1 0 3.35l-.568.142a1.75 1.75 0 0 0-1.23 2.37l.216.54a1.75 1.75 0 0 1-2.265 2.265l-.54-.216a1.75 1.75 0 0 0-2.37 1.23l-.142.568a1.75 1.75 0 0 1-3.35 0l-.142-.568a1.75 1.75 0 0 0-2.37-1.23l-.54.216a1.75 1.75 0 0 1-2.265-2.265l.216-.54a1.75 1.75 0 0 0-1.23-2.37l-.568-.142a1.75 1.75 0 0 1 0-3.35l.568-.142a1.75 1.75 0 0 0 1.23-2.37l-.216-.54A1.75 1.75 0 0 1 7.85 5.899l.54.216a1.75 1.75 0 0 0 2.37-1.23l.142-.568ZM12 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6Z" />
+                  </svg>
+                </span>
+                <span className={`${isCollapsed ? 'hidden md:group-hover:inline' : 'inline'} ml-3`}>Configurações</span>
+              </span>
+            )}
           </NavLink>
         </nav>
       </div>
